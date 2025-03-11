@@ -208,7 +208,7 @@ open class ATListSectionVM {
 }
 
 final public class ATListViewProxy: NSObject {
-    public weak var forwarder:NSObject?
+    public weak var forwarder:AnyObject?
     private var _defaultSectionVM:ATListSectionVM?
     public var defaultSectionVM:ATListSectionVM {
         get {
@@ -304,10 +304,6 @@ extension ATListViewProxy: UICollectionViewDelegate, UICollectionViewDataSource 
         collectionView.deselectItem(at: indexPath, animated: true)
         guard let itemVM = getItemVM(indexPath: indexPath) else { return }
         itemVM.onSelectItemBlock?(collectionView, indexPath, itemVM)
-    }
-    
-    public override class func forwardingTarget(for aSelector: Selector!) -> Any? {
-        
     }
 }
 
