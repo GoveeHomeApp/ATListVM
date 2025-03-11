@@ -208,6 +208,7 @@ open class ATListSectionVM {
 }
 
 final public class ATListViewProxy: NSObject {
+    public weak var forwarder:NSObject?
     private var _defaultSectionVM:ATListSectionVM?
     public var defaultSectionVM:ATListSectionVM {
         get {
@@ -242,6 +243,15 @@ final public class ATListViewProxy: NSObject {
     }
     private func getItemVM(indexPath: IndexPath) -> ATListItemVM? {
         getItemVM(section: indexPath.section, item: indexPath.item)
+    }
+    public override func forwardingTarget(for aSelector: Selector!) -> Any? {
+        if let forwarder = forwarder, forwarder.responds(to: aSelector) {
+            return forwarder
+        }
+        return super.forwardingTarget(for: aSelector)
+    }
+    public override func responds(to aSelector: Selector!) -> Bool {
+        super.responds(to: aSelector) || (forwarder != nil && forwarder!.responds(to: aSelector))
     }
 }
 extension ATListViewProxy: UICollectionViewDelegate, UICollectionViewDataSource {
@@ -294,6 +304,10 @@ extension ATListViewProxy: UICollectionViewDelegate, UICollectionViewDataSource 
         collectionView.deselectItem(at: indexPath, animated: true)
         guard let itemVM = getItemVM(indexPath: indexPath) else { return }
         itemVM.onSelectItemBlock?(collectionView, indexPath, itemVM)
+    }
+    
+    public override class func forwardingTarget(for aSelector: Selector!) -> Any? {
+        
     }
 }
 
