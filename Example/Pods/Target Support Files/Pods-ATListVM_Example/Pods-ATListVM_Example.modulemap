@@ -1,0 +1,6 @@
+framework module Pods_ATListVM_Example {
+  umbrella header "Pods-ATListVM_Example-umbrella.h"
+
+  export *
+  module * { export * }
+}

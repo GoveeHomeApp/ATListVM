@@ -1,0 +1,6 @@
+framework module ATListVM {
+  umbrella header "ATListVM-umbrella.h"
+
+  export *
+  module * { export * }
+}
