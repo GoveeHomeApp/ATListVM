@@ -121,7 +121,7 @@ class Demo1SectionVM: ATListSectionVM {
         
         // 5 构造 header / footer
         let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(48.rate))
-        let header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize, elementKind: UICollectionElementKindSectionHeader, alignment: .top)
+        let header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize, elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
 //            header.pinToVisibleBounds = true
         
         // 6 构造NSCollectionLayoutSection
@@ -147,7 +147,7 @@ class Demo1SectionVM: ATListSectionVM {
         
         // 5 构造 header / footer
         let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(48.rate))
-        let header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize, elementKind: UICollectionElementKindSectionHeader, alignment: .top)
+        let header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize, elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
 //            header.pinToVisibleBounds = true
         
         // 6 构造NSCollectionLayoutSection
@@ -182,8 +182,8 @@ class Demo1ListVM: ATListVM {
     override func register(collectionView: UICollectionView) {
         super.register(collectionView: collectionView)
         collectionView.register(Demo1Cell.self, forCellWithReuseIdentifier: "Demo1Cell")
-        collectionView.register(Demo1HeaderView.self, forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: "Demo1HeaderView")
-        collectionView.register(Demo1FooterView.self, forSupplementaryViewOfKind: UICollectionElementKindSectionFooter, withReuseIdentifier: "Demo1FooterView")
+        collectionView.register(Demo1HeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "Demo1HeaderView")
+        collectionView.register(Demo1FooterView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: "Demo1FooterView")
     }
     
     

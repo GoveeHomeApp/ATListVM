@@ -179,7 +179,7 @@ open class ATListSectionVM {
             DispatchQueue.main.async {
                 guard let collectionView = self.collectionView, let indexPath = self.indexPath else { return }
                 UIView.performWithoutAnimation {
-                    if let header = collectionView.supplementaryView(forElementKind: UICollectionElementKindSectionHeader, at: indexPath) as? ATListReuseableView {
+                    if let header = collectionView.supplementaryView(forElementKind: UICollectionView.elementKindSectionHeader, at: indexPath) as? ATListReuseableView {
                         header.refreshSubviews(isFromVM: true)
                         header.layoutIfNeeded()
                     }
@@ -191,7 +191,7 @@ open class ATListSectionVM {
             DispatchQueue.main.async {
                 guard let collectionView = self.collectionView, let indexPath = self.indexPath else { return }
                 UIView.performWithoutAnimation {
-                    if let footer = collectionView.supplementaryView(forElementKind: UICollectionElementKindSectionFooter, at: indexPath) as? ATListReuseableView {
+                    if let footer = collectionView.supplementaryView(forElementKind: UICollectionView.elementKindSectionFooter, at: indexPath) as? ATListReuseableView {
                         footer.refreshSubviews(isFromVM: true)
                         footer.layoutIfNeeded()
                     }
@@ -274,13 +274,13 @@ extension ATListViewProxy: UICollectionViewDelegate, UICollectionViewDataSource 
         guard let sectionVM = getSectionVM(section: indexPath.section) else {
             return UICollectionReusableView()
         }
-        if kind == UICollectionElementKindSectionHeader {
+        if kind == UICollectionView.elementKindSectionHeader {
             if let headerId = sectionVM.headerId {
                 let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: headerId, for: indexPath) as! ATListReuseableView
                 header.config(sectionVM: sectionVM, indexPath: indexPath)
                 return header
             }
-        }else if kind == UICollectionElementKindSectionFooter {
+        }else if kind == UICollectionView.elementKindSectionFooter {
             if let footerId = sectionVM.footerId {
                 let footer = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: footerId, for: indexPath) as! ATListReuseableView
                 footer.config(sectionVM: sectionVM, indexPath: indexPath)
@@ -337,7 +337,7 @@ extension UICollectionView {
     public func config(viewProxy:ATListViewProxy) {
         delegate = viewProxy
         dataSource = viewProxy
-        register(ATListReuseableView.self, forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: "ATListReuseableView")
-        register(ATListReuseableView.self, forSupplementaryViewOfKind: UICollectionElementKindSectionFooter, withReuseIdentifier: "ATListReuseableView")
+        register(ATListReuseableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "ATListReuseableView")
+        register(ATListReuseableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: "ATListReuseableView")
     }
 }
