@@ -1,0 +1,22 @@
+{
+  "name": "ATListVM",
+  "version": "0.1.0",
+  "summary": "A short description of ATListVM.",
+  "description": "TODO: Add long description of the pod here.",
+  "homepage": "https://github.com/yebiaoli/ATListVM",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "yebiaoli": "yebiao.li@ihoment.com"
+  },
+  "source": {
+    "git": "https://github.com/yebiaoli/ATListVM.git",
+    "tag": "0.1.0"
+  },
+  "platforms": {
+    "ios": "13.0"
+  },
+  "source_files": "ATListVM/Classes/**/*"
+}

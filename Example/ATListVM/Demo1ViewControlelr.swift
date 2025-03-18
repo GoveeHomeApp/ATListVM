@@ -60,25 +60,49 @@ class Demo1FooterView: ATListReuseableView {
 }
 
 class Demo1Cell: ATListCell {
-    lazy var textLabel = UILabel()
+    class CustomView: LUFastViewSwift {
+        lazy var topView = UIView().then { v in
+            v.backgroundColor = .random
+        }
+        lazy var textLabel = UILabel().then { v in
+            v.numberOfLines = 0
+        }
+        override func setupSubviews() {
+            super.setupSubviews()
+            textLabel.numberOfLines = 0
+            addSubview(topView)
+            addSubview(textLabel)
+        }
+        override func setupLayout() {
+            super.setupLayout()
+            topView.snp.makeConstraints { make in
+                make.leading.top.trailing.equalToSuperview()
+                make.height.equalTo(40.rate)
+            }
+            textLabel.snp.makeConstraints { make in
+                make.leading.trailing.equalToSuperview().inset(0)
+                make.bottom.equalToSuperview().inset(0).priority(.high)
+                make.top.equalToSuperview().inset(40.rate).priority(.required)
+            }
+        }
+    }
+    lazy var custoView = CustomView()
     override func setupSubviews() {
         super.setupSubviews()
         contentView.backgroundColor = .white
-        textLabel.numberOfLines = 0
-        contentView.addSubview(textLabel)
+        contentView.addSubview(custoView)
     }
     override func setupLayout() {
         super.setupLayout()
-        textLabel.snp.makeConstraints { make in
-            make.leading.trailing.equalToSuperview().inset(0)
-            make.top.bottom.equalToSuperview().inset(0)
+        custoView.snp.makeConstraints { make in
+            make.leading.top.trailing.bottom.equalToSuperview()
         }
     }
     override func refreshSubviews(isFromVM: Bool) {
         super.refreshSubviews(isFromVM: isFromVM)
         let vm = itemVM as? Demo1ItemVM
-        textLabel.text = vm?.text
-        textLabel.numberOfLines = vm?.expand ?? true ? 0 : 2
+        custoView.textLabel.numberOfLines = vm?.expand ?? true ? 0 : 2
+        custoView.textLabel.text = vm?.text
     }
 }
 
@@ -93,8 +117,8 @@ class Demo1SectionVM: ATListSectionVM {
     }
     override func setupData() {
         super.setupData()
-        headerId = "Demo1HeaderView"
-        footerId = "Demo1FooterView"
+//        headerId = "Demo1HeaderView"
+//        footerId = "Demo1FooterView"
     }
     
     override func createLayout() {
@@ -104,7 +128,13 @@ class Demo1SectionVM: ATListSectionVM {
         }else{
             itemVMs.removeAll()
         }
+        
+        layoutSection = ATListSectionVM.createTopicsLayoutSection()
+        
     }
+    
+    
+    
     
     func createLayoutSection1() -> NSCollectionLayoutSection {
         //1 构造Item的NSCollectionLayoutSize
@@ -143,10 +173,10 @@ class Demo1SectionVM: ATListSectionVM {
         // 4 构造NSCollectionLayoutGroup
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
 //            group.interItemSpacing = .fixed(floor(10.5.rate))
-        group.contentInsets = .init(top: 10, leading: 50.rate, bottom: 10, trailing: 50.rate)
+//        group.contentInsets = .init(top: 10, leading: 50.rate, bottom: 10, trailing: 50.rate)
         
         // 5 构造 header / footer
-        let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(48.rate))
+        let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(40.rate))
         let header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize, elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
 //            header.pinToVisibleBounds = true
         
@@ -190,80 +220,93 @@ class Demo1ListVM: ATListVM {
     override func createData() {
         super.createData()
         
-        let itemVM1 = Demo1ItemVM(text: "11 有时候也要配合上面自动布局需要实现的方法共同")
-        let sectionVM1 = Demo1SectionVM(text: "1")
-        sectionVM1.layoutSection = sectionVM1.createLayoutSection1()
-        sectionVM1.oriItemVMs.append(itemVM1)
-        
-        let itemVM12 = Demo1ItemVM(text: "12 正如 @Caio 在评论中指出的那样，此解决方案会导致 iOS 10 及更早版本崩溃。在我的项目中，我通过包装上面的代码if #available(iOS 11.0, *) { ... }并在 else 子句中提供固定大小来“解决”了这个问题。这不是理想的，但对我来说是可以接受的。")
-        sectionVM1.oriItemVMs.append(itemVM12)
-        sectionVM1.createLayout()
-        viewProxy.sectionVMs.append(sectionVM1)
-        
-        let itemVM2 = Demo1ItemVM(text: "21 比如，CollectionViewCell中有一个支持多行的label, 在sectionController的sizeForItem 中首先要手动计算这些字所占高度，再加上label上下间隙高度。")
-        let sectionVM2 = Demo1SectionVM(text: "2")
-        sectionVM2.layoutSection = sectionVM1.createLayoutSection2()
-        sectionVM2.oriItemVMs.append(itemVM2)
-        sectionVM2.createLayout()
-        viewProxy.sectionVMs.append(sectionVM2)
-        
-        let itemVM3 = Demo1ItemVM(text: "31 计算字所占高度通常可通知创建一个模拟label的实际计算，注意这个模拟label的字体以及样式")
-        let sectionVM3 = Demo1SectionVM(text: "3")
-        sectionVM3.oriItemVMs.append(itemVM3)
-        sectionVM3.createLayout()
-        viewProxy.sectionVMs.append(sectionVM3)
-        
-        let itemVM4 = Demo1ItemVM(text: "41 UITableViewCell的自动高度很方便，开发中很多时候首选tableView的原因也是因为这个，可以减少很多高度或者动态高度的计算过程。CollectionViewCell 其实也是可以自动高度的, 需要重写实现一个方法func preferredLayoutAttributesFitting(_ layoutAttributesUICollectionViewLayoutAttributes) -> UICollectionViewLayoutAttributes")
-        let sectionVM4 = Demo1SectionVM(text: "4")
-        
-        itemVM4.onSelectItemBlock = { [weak sectionVM4] collectionView, indexPath, itemVM in
-            if let vm = sectionVM4 {
-                vm.expand = !vm.expand
-                vm.createLayout()
-                vm.reloadSectionBlock?()
+        let sectionVM = Demo1SectionVM(text: "Test")
+        for i in 0 ... 10{
+            if i % 2 == 0 {
+                let itemVM = Demo1ItemVM(text: "Begin  UITableViewCell的自动高度很方便，开发中很多时候首选tableView的原因也是因为这个，可以减少很多高度或者动态高度的计算过程。CollectionViewCell 其实也是可以自动高度的, 需要重写实现一个方法func preferredLayoutAttributesFitting(_ layoutAttributesUICollectionViewLayoutAttributes) -> UICollectionViewLayoutAttributes End")
+                sectionVM.oriItemVMs.append(itemVM)
+            }else{
+                let itemVM = Demo1ItemVM(text: "Begin  有时候也要配合上面自动布局需要实现的方法共同 End")
+                sectionVM.oriItemVMs.append(itemVM)
             }
         }
+        sectionVM.createLayout()
+        viewProxy.sectionVMs.append(sectionVM)
         
-        sectionVM4.oriItemVMs.append(itemVM4)
-        sectionVM4.createLayout()
-        viewProxy.sectionVMs.append(sectionVM4)
-        
-        let itemVM5 = Demo1ItemVM(text: "51 计算字所占高度通常可通知创建一个模拟label的实际计算，注意这个模拟label的字体以及样式 比如，CollectionViewCell中有一个支持多行的label, 在sectionController的sizeForItem 中首先要手动计算这些字所占高度，再加上label上下间隙高度。有时候需要实现在tableViewCell中嵌入collectionView, 虽然tableViewCell可以实现自动高度，但因为collectionView是可以滚动的，虽然可以像textView一样禁掉滚动属性，但毕竟是collectionView, 有时候加载的东西比较多，实现不了像textView一样实时更新高度。如果collectionViewCell的item大小不确定，有什么办法实现tableViewCell的自动高度呢？")
-        itemVM5.onSelectItemBlock = { collectionView, indexPath, itemVM in
-            let vm = itemVM as? Demo1ItemVM
-            vm?.text = "1111111"
-            vm?.reloadListBlock?()
-        }
-        let sectionVM5 = Demo1SectionVM(text: "5")
-        sectionVM5.oriItemVMs.append(itemVM5)
-        sectionVM5.createLayout()
-        viewProxy.sectionVMs.append(sectionVM5)
-        
-        let itemVM6 = Demo1ItemVM(text: "61 计算字所占高度通常可通知")
-        let sectionVM6 = Demo1SectionVM(text: "6")
-        sectionVM6.oriItemVMs.append(itemVM6)
-        sectionVM6.createLayout()
-        viewProxy.sectionVMs.append(sectionVM6)
-        
-        let sectionVM7 = Demo1SectionVM(text: "7")
-        let itemVM7 = Demo1ItemVM(text: "71 计算字所占高度通常可通知创建一个模拟label的实际计算，注意这个模拟label的字体以及样式 比如，CollectionViewCell中有一个支持多行的label, 在sectionController的sizeForItem 中首先要手动计算这些字所占高度，再加上label上下间隙高度。有时候需要实现在tableViewCel")
-        itemVM7.onSelectItemBlock = { [weak sectionVM7] collectionView, indexPath, itemVM in
-            sectionVM7?.itemVMs.removeAll()
-            itemVM.reloadListBlock?()
-        }
-        sectionVM7.oriItemVMs.append(itemVM7)
-        sectionVM7.createLayout()
-        viewProxy.sectionVMs.append(sectionVM7)
-        
-        let sectionVM8 = Demo1SectionVM(text: "8")
-        let itemVM8 = Demo1ItemVM(text: "81 计算字所占高度通常可通知创建一个模拟label的实际计算，注意这个模拟label的字体以及样式 比如，CollectionViewCell中有一个支持多行的label, 在sectionController的sizeForItem 中首先要手动计算这些字所占高度，再加上label上下间隙高度。有时候需要实现在tableViewCell中嵌入collectionView")
-        itemVM8.onSelectItemBlock = { [weak sectionVM8] collectionView, indexPath, itemVM in
-            sectionVM8?.itemVMs.removeAll()
-            itemVM.reloadListBlock?()
-        }
-        sectionVM8.oriItemVMs.append(itemVM8)
-        sectionVM8.createLayout()
-        viewProxy.sectionVMs.append(sectionVM8)
+//        let itemVM1 = Demo1ItemVM(text: "11 有时候也要配合上面自动布局需要实现的方法共同")
+//        let sectionVM1 = Demo1SectionVM(text: "1")
+//        sectionVM1.layoutSection = sectionVM1.createLayoutSection1()
+//        sectionVM1.oriItemVMs.append(itemVM1)
+//        
+//        let itemVM12 = Demo1ItemVM(text: "12 正如 @Caio 在评论中指出的那样，此解决方案会导致 iOS 10 及更早版本崩溃。在我的项目中，我通过包装上面的代码if #available(iOS 11.0, *) { ... }并在 else 子句中提供固定大小来“解决”了这个问题。这不是理想的，但对我来说是可以接受的。")
+//        sectionVM1.oriItemVMs.append(itemVM12)
+//        sectionVM1.createLayout()
+//        viewProxy.sectionVMs.append(sectionVM1)
+//        
+//        let itemVM2 = Demo1ItemVM(text: "21 比如，CollectionViewCell中有一个支持多行的label, 在sectionController的sizeForItem 中首先要手动计算这些字所占高度，再加上label上下间隙高度。")
+//        let sectionVM2 = Demo1SectionVM(text: "2")
+//        sectionVM2.layoutSection = sectionVM1.createLayoutSection2()
+//        sectionVM2.oriItemVMs.append(itemVM2)
+//        sectionVM2.createLayout()
+//        viewProxy.sectionVMs.append(sectionVM2)
+//        
+//        let itemVM3 = Demo1ItemVM(text: "31 计算字所占高度通常可通知创建一个模拟label的实际计算，注意这个模拟label的字体以及样式")
+//        let sectionVM3 = Demo1SectionVM(text: "3")
+//        sectionVM3.oriItemVMs.append(itemVM3)
+//        sectionVM3.createLayout()
+//        viewProxy.sectionVMs.append(sectionVM3)
+//        
+//        let itemVM4 = Demo1ItemVM(text: "41 UITableViewCell的自动高度很方便，开发中很多时候首选tableView的原因也是因为这个，可以减少很多高度或者动态高度的计算过程。CollectionViewCell 其实也是可以自动高度的, 需要重写实现一个方法func preferredLayoutAttributesFitting(_ layoutAttributesUICollectionViewLayoutAttributes) -> UICollectionViewLayoutAttributes")
+//        let sectionVM4 = Demo1SectionVM(text: "4")
+//        
+//        itemVM4.onSelectItemBlock = { [weak sectionVM4] collectionView, indexPath, itemVM in
+//            if let vm = sectionVM4 {
+//                vm.expand = !vm.expand
+//                vm.createLayout()
+//                vm.reloadSectionBlock?()
+//            }
+//        }
+//        
+//        sectionVM4.oriItemVMs.append(itemVM4)
+//        sectionVM4.createLayout()
+//        viewProxy.sectionVMs.append(sectionVM4)
+//        
+//        let itemVM5 = Demo1ItemVM(text: "51 计算字所占高度通常可通知创建一个模拟label的实际计算，注意这个模拟label的字体以及样式 比如，CollectionViewCell中有一个支持多行的label, 在sectionController的sizeForItem 中首先要手动计算这些字所占高度，再加上label上下间隙高度。有时候需要实现在tableViewCell中嵌入collectionView, 虽然tableViewCell可以实现自动高度，但因为collectionView是可以滚动的，虽然可以像textView一样禁掉滚动属性，但毕竟是collectionView, 有时候加载的东西比较多，实现不了像textView一样实时更新高度。如果collectionViewCell的item大小不确定，有什么办法实现tableViewCell的自动高度呢？")
+//        itemVM5.onSelectItemBlock = { collectionView, indexPath, itemVM in
+//            let vm = itemVM as? Demo1ItemVM
+//            vm?.text = "1111111"
+//            vm?.reloadListBlock?()
+//        }
+//        let sectionVM5 = Demo1SectionVM(text: "5")
+//        sectionVM5.oriItemVMs.append(itemVM5)
+//        sectionVM5.createLayout()
+//        viewProxy.sectionVMs.append(sectionVM5)
+//        
+//        let itemVM6 = Demo1ItemVM(text: "61 计算字所占高度通常可通知")
+//        let sectionVM6 = Demo1SectionVM(text: "6")
+//        sectionVM6.oriItemVMs.append(itemVM6)
+//        sectionVM6.createLayout()
+//        viewProxy.sectionVMs.append(sectionVM6)
+//        
+//        let sectionVM7 = Demo1SectionVM(text: "7")
+//        let itemVM7 = Demo1ItemVM(text: "71 计算字所占高度通常可通知创建一个模拟label的实际计算，注意这个模拟label的字体以及样式 比如，CollectionViewCell中有一个支持多行的label, 在sectionController的sizeForItem 中首先要手动计算这些字所占高度，再加上label上下间隙高度。有时候需要实现在tableViewCel")
+//        itemVM7.onSelectItemBlock = { [weak sectionVM7] collectionView, indexPath, itemVM in
+//            sectionVM7?.itemVMs.removeAll()
+//            itemVM.reloadListBlock?()
+//        }
+//        sectionVM7.oriItemVMs.append(itemVM7)
+//        sectionVM7.createLayout()
+//        viewProxy.sectionVMs.append(sectionVM7)
+//        
+//        let sectionVM8 = Demo1SectionVM(text: "8")
+//        let itemVM8 = Demo1ItemVM(text: "81 计算字所占高度通常可通知创建一个模拟label的实际计算，注意这个模拟label的字体以及样式 比如，CollectionViewCell中有一个支持多行的label, 在sectionController的sizeForItem 中首先要手动计算这些字所占高度，再加上label上下间隙高度。有时候需要实现在tableViewCell中嵌入collectionView")
+//        itemVM8.onSelectItemBlock = { [weak sectionVM8] collectionView, indexPath, itemVM in
+//            sectionVM8?.itemVMs.removeAll()
+//            itemVM.reloadListBlock?()
+//        }
+//        sectionVM8.oriItemVMs.append(itemVM8)
+//        sectionVM8.createLayout()
+//        viewProxy.sectionVMs.append(sectionVM8)
         
     }
 }
@@ -289,12 +332,12 @@ class Demo1ViewControlelr: UIViewController {
             // 4 构造NSCollectionLayoutGroup
             let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
             
-            let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(48.rate))
-            let header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize, elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
+//            let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(48.rate))
+//            let header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize, elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
             
             let section = NSCollectionLayoutSection(group: group)
-            section.interGroupSpacing = 5.rate
-            section.boundarySupplementaryItems = [header]
+//            section.interGroupSpacing = 5.rate
+//            section.boundarySupplementaryItems = [header]
             
             return section
         }

@@ -34,6 +34,12 @@ open class ATListCell: UICollectionViewCell {
         refreshSubviews(isFromVM: false)
         layoutIfNeeded()
     }
+    open func willDisplay() {
+        
+    }
+    open func didEndDisplaying() {
+        
+    }
     open func refreshSubviews(isFromVM:Bool) {
         
     }
@@ -95,6 +101,12 @@ open class ATListItemVM {
         
     }
     open func createLayout() {
+        
+    }
+    open func willDisplay() {
+        
+    }
+    open func didEndDisplaying() {
         
     }
 }
@@ -207,8 +219,25 @@ open class ATListSectionVM {
     }
 }
 
+public protocol ATListViewProxyDelegate: AnyObject {
+    func listViewProxy(collectionView: UICollectionView, cell:UICollectionViewCell, indexPath:IndexPath)
+    func listViewProxy(collectionView: UICollectionView, cellWillDisplay:UICollectionViewCell, indexPath:IndexPath)
+    func listViewProxy(collectionView: UICollectionView, cellDidEndDisplaying:UICollectionViewCell, indexPath:IndexPath)
+    func listViewProxy(collectionView: UICollectionView, header:UICollectionReusableView, kind:String, indexPath:IndexPath)
+    func listViewProxy(collectionView: UICollectionView, footer:UICollectionReusableView, kind:String, indexPath:IndexPath)
+}
+
+extension ATListViewProxyDelegate {
+    public func listViewProxy(collectionView: UICollectionView, cell:UICollectionViewCell, indexPath:IndexPath) {}
+    public func listViewProxy(collectionView: UICollectionView, cellWillDisplay:UICollectionViewCell, indexPath:IndexPath) {}
+    public func listViewProxy(collectionView: UICollectionView, cellDidEndDisplaying:UICollectionViewCell, indexPath:IndexPath) {}
+    public func listViewProxy(collectionView: UICollectionView, header:UICollectionReusableView, kind:String, indexPath:IndexPath) {}
+    public func listViewProxy(collectionView: UICollectionView, footer:UICollectionReusableView, kind:String, indexPath:IndexPath) {}
+}
+
 final public class ATListViewProxy: NSObject {
     public weak var forwarder:AnyObject?
+    public weak var delegate:ATListViewProxyDelegate?
     private var _defaultSectionVM:ATListSectionVM?
     public var defaultSectionVM:ATListSectionVM {
         get {
@@ -278,7 +307,24 @@ extension ATListViewProxy: UICollectionViewDelegate, UICollectionViewDataSource 
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: itemVM.cellId, for: indexPath) as! ATListCell
         cell.config(itemVM: itemVM, indexPath: indexPath)
+        
+        self.delegate?.listViewProxy(collectionView: collectionView, cell: cell, indexPath: indexPath)
+        
         return cell
+    }
+    public func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        let itemVM = getItemVM(indexPath: indexPath)
+        itemVM?.willDisplay()
+        let listCell = cell as! ATListCell
+        listCell.willDisplay()
+        self.delegate?.listViewProxy(collectionView: collectionView, cellWillDisplay: cell, indexPath: indexPath)
+    }
+    public func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        let itemVM = getItemVM(indexPath: indexPath)
+        itemVM?.didEndDisplaying()
+        let listCell = cell as! ATListCell
+        listCell.didEndDisplaying()
+        self.delegate?.listViewProxy(collectionView: collectionView, cellDidEndDisplaying: cell, indexPath: indexPath)
     }
     public func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         guard let sectionVM = getSectionVM(section: indexPath.section) else {
@@ -288,12 +334,14 @@ extension ATListViewProxy: UICollectionViewDelegate, UICollectionViewDataSource 
             if let headerId = sectionVM.headerId {
                 let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: headerId, for: indexPath) as! ATListReuseableView
                 header.config(sectionVM: sectionVM, indexPath: indexPath)
+                self.delegate?.listViewProxy(collectionView: collectionView, header: header, kind: kind, indexPath: indexPath)
                 return header
             }
         }else if kind == UICollectionView.elementKindSectionFooter {
             if let footerId = sectionVM.footerId {
                 let footer = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: footerId, for: indexPath) as! ATListReuseableView
                 footer.config(sectionVM: sectionVM, indexPath: indexPath)
+                self.delegate?.listViewProxy(collectionView: collectionView, footer: footer, kind: kind, indexPath: indexPath)
                 return footer
             }
         }
@@ -307,10 +355,34 @@ extension ATListViewProxy: UICollectionViewDelegate, UICollectionViewDataSource 
     }
 }
 
+public typealias ATListVMState = String
+extension ATListVMState {
+    enum Value: String {
+        case idl = "idl"
+        case add = "add"
+        case delete = "delete"
+        case update = "update"
+        case query = "query"
+        case success = "success"
+        case failure = "failure"
+        case error = "error"
+        case empty = "empty"
+        case noNet = "noNet"
+        case noData = "noData"
+        case load = "load"
+    }
+}
+
+public protocol ATListVMDelegate: AnyObject {
+    func listVMDidChange(state:ATListVMState, tag:Int, msg:String?, err:Error?)
+}
+
 open class ATListVM {
     
     public private(set) var viewProxy:ATListViewProxy = ATListViewProxy()
     fileprivate weak var collecitonView:UICollectionView?
+    
+    public weak var delegate:ATListVMDelegate?
     
     public init() {
         setupData()
@@ -330,12 +402,21 @@ open class ATListVM {
     }
     
     open func reloadData() {
-        collecitonView?.reloadData()
+        DispatchQueue.main.async {
+            self.collecitonView?.reloadData()
+        }
     }
     
     open func register(collectionView: UICollectionView) {
         collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "UICollectionViewCell")
         self.collecitonView = collectionView
+    }
+    
+}
+
+extension ATListVM: ATListVMDelegate {
+    public func listVMDidChange(state: ATListVMState, tag: Int, msg: String?, err: (any Error)?) {
+        delegate?.listVMDidChange(state: state, tag: tag, msg: msg, err: err)
     }
 }
 

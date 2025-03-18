@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2B7C1411A2ED2693DFED6C53 /* Pods_ATListVM_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96C34A3532BDB90EC2E0EA33 /* Pods_ATListVM_Example.framework */; };
 		5313102C2D8017AC00F4D94F /* Demo1ViewControlelr.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5313102B2D8017AC00F4D94F /* Demo1ViewControlelr.swift */; };
 		607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD51AFB9204008FA782 /* AppDelegate.swift */; };
 		607FACD81AFB9204008FA782 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD71AFB9204008FA782 /* ViewController.swift */; };
@@ -15,7 +14,8 @@
 		607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDC1AFB9204008FA782 /* Images.xcassets */; };
 		607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDE1AFB9204008FA782 /* LaunchScreen.xib */; };
 		607FACEC1AFB9204008FA782 /* Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACEB1AFB9204008FA782 /* Tests.swift */; };
-		A3292A29FB19D34E340D8F8F /* Pods_ATListVM_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0D626E6299D3664DC57345F /* Pods_ATListVM_Tests.framework */; };
+		6C9EF9E3E39F955046D7BEBB /* libPods-ATListVM_Example.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D7E665F96C3043DB7C50BFC /* libPods-ATListVM_Example.a */; };
+		D97D600208EAC5E45525B9FB /* libPods-ATListVM_Tests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B8AA905DC9D1049EE30A0477 /* libPods-ATListVM_Tests.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -30,6 +30,7 @@
 
 /* Begin PBXFileReference section */
 		19A062FF0765449104D9BA3E /* ATListVM.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = ATListVM.podspec; path = ../ATListVM.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		1D7E665F96C3043DB7C50BFC /* libPods-ATListVM_Example.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ATListVM_Example.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		42ECE0BB2B3E570283DEDA46 /* Pods-ATListVM_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ATListVM_Example.debug.xcconfig"; path = "Target Support Files/Pods-ATListVM_Example/Pods-ATListVM_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		4AADA995CF980F4AC342426C /* Pods-ATListVM_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ATListVM_Tests.release.xcconfig"; path = "Target Support Files/Pods-ATListVM_Tests/Pods-ATListVM_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		5313102B2D8017AC00F4D94F /* Demo1ViewControlelr.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Demo1ViewControlelr.swift; sourceTree = "<group>"; };
@@ -45,8 +46,7 @@
 		607FACEA1AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		607FACEB1AFB9204008FA782 /* Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests.swift; sourceTree = "<group>"; };
 		7FB6829276B5B62745864FD9 /* Pods-ATListVM_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ATListVM_Example.release.xcconfig"; path = "Target Support Files/Pods-ATListVM_Example/Pods-ATListVM_Example.release.xcconfig"; sourceTree = "<group>"; };
-		96C34A3532BDB90EC2E0EA33 /* Pods_ATListVM_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ATListVM_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		C0D626E6299D3664DC57345F /* Pods_ATListVM_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ATListVM_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B8AA905DC9D1049EE30A0477 /* libPods-ATListVM_Tests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ATListVM_Tests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F211128F5D488897CC39EAD8 /* Pods-ATListVM_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ATListVM_Tests.debug.xcconfig"; path = "Target Support Files/Pods-ATListVM_Tests/Pods-ATListVM_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		F24F0CAF21FC44318069704A /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -56,7 +56,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2B7C1411A2ED2693DFED6C53 /* Pods_ATListVM_Example.framework in Frameworks */,
+				6C9EF9E3E39F955046D7BEBB /* libPods-ATListVM_Example.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -64,7 +64,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A3292A29FB19D34E340D8F8F /* Pods_ATListVM_Tests.framework in Frameworks */,
+				D97D600208EAC5E45525B9FB /* libPods-ATListVM_Tests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -85,8 +85,8 @@
 		54B68FD8493DBABCBCE32E42 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				96C34A3532BDB90EC2E0EA33 /* Pods_ATListVM_Example.framework */,
-				C0D626E6299D3664DC57345F /* Pods_ATListVM_Tests.framework */,
+				1D7E665F96C3043DB7C50BFC /* libPods-ATListVM_Example.a */,
+				B8AA905DC9D1049EE30A0477 /* libPods-ATListVM_Tests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -173,7 +173,7 @@
 				607FACCC1AFB9204008FA782 /* Sources */,
 				607FACCD1AFB9204008FA782 /* Frameworks */,
 				607FACCE1AFB9204008FA782 /* Resources */,
-				046507070654ECA84873C3F1 /* [CP] Embed Pods Frameworks */,
+				C5905C869A815611578264E4 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -267,26 +267,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		046507070654ECA84873C3F1 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-ATListVM_Example/Pods-ATListVM_Example-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/ATListVM/ATListVM.framework",
-				"${BUILT_PRODUCTS_DIR}/SnapKit/SnapKit.framework",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ATListVM.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SnapKit.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ATListVM_Example/Pods-ATListVM_Example-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		B93547F8CC0C3878D6345DC7 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -307,6 +287,24 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		C5905C869A815611578264E4 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-ATListVM_Example/Pods-ATListVM_Example-resources.sh",
+				"${PODS_CONFIGURATION_BUILD_DIR}/SnapKit/SnapKit_Privacy.bundle",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/SnapKit_Privacy.bundle",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ATListVM_Example/Pods-ATListVM_Example-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		EC18A0DA4CB667BE7881D8AB /* [CP] Check Pods Manifest.lock */ = {
@@ -427,7 +425,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -473,7 +471,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
