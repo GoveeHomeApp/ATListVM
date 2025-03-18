@@ -61,6 +61,8 @@ open class ATListItemVM {
     public fileprivate(set) var indexPath: IndexPath?
     
     public var cellId:String = "UICollectionViewCell"
+    public var itemSize:CGSize = .zero
+    public var data:Any?
     
     public init() {
         _setupBlock()
@@ -161,7 +163,11 @@ open class ATListSectionVM {
     public var headerId:String?
     public var footerId:String?
     public var layoutSection:NSCollectionLayoutSection?
-    
+    public var headerSize:CGSize = .zero
+    public var footerSize:CGSize = .zero
+    public var sectionInset:UIEdgeInsets = .zero
+    public var minimumLineSpacing:CGFloat = 0
+    public var minimumInteritemSpacing:CGFloat = 0
     public var itemVMs:[ATListItemVM] = []
     
     public init() {
@@ -283,7 +289,7 @@ final public class ATListViewProxy: NSObject {
         super.responds(to: aSelector) || (forwarder != nil && forwarder!.responds(to: aSelector))
     }
 }
-extension ATListViewProxy: UICollectionViewDelegate, UICollectionViewDataSource {
+extension ATListViewProxy: UICollectionViewDataSource {
     public func numberOfSections(in collectionView: UICollectionView) -> Int {
         if _defaultSectionVM == nil {
             return sectionVMs.count
@@ -347,11 +353,33 @@ extension ATListViewProxy: UICollectionViewDelegate, UICollectionViewDataSource 
         }
         return UICollectionReusableView()
     }
-    
+}
+extension ATListViewProxy: UICollectionViewDelegate {
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: true)
         guard let itemVM = getItemVM(indexPath: indexPath) else { return }
         itemVM.onSelectItemBlock?(collectionView, indexPath, itemVM)
+    }
+}
+
+extension ATListViewProxy: UICollectionViewDelegateFlowLayout {
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        getItemVM(indexPath: indexPath)?.itemSize ?? .zero
+    }
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        getSectionVM(section: section)?.headerSize ?? .zero
+    }
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
+        getSectionVM(section: section)?.footerSize ?? .zero
+    }
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        getSectionVM(section: section)?.sectionInset ?? .zero
+    }
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        getSectionVM(section: section)?.minimumLineSpacing ?? 0
+    }
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        getSectionVM(section: section)?.minimumInteritemSpacing ?? 0
     }
 }
 
