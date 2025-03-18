@@ -306,16 +306,19 @@ extension ATListViewProxy: UICollectionViewDataSource {
         
         guard let itemVM = getItemVM(indexPath: indexPath) else {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "UICollectionViewCell", for: indexPath)
+            self.delegate?.listViewProxy(collectionView: collectionView, cell: cell, indexPath: indexPath)
             return cell
         }
         itemVM.indexPath = indexPath
         itemVM.collectionView = collectionView
         
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: itemVM.cellId, for: indexPath) as! ATListCell
-        cell.config(itemVM: itemVM, indexPath: indexPath)
-        
+        if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: itemVM.cellId, for: indexPath) as? ATListCell {
+            cell.config(itemVM: itemVM, indexPath: indexPath)
+            self.delegate?.listViewProxy(collectionView: collectionView, cell: cell, indexPath: indexPath)
+            return cell
+        }
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "UICollectionViewCell", for: indexPath)
         self.delegate?.listViewProxy(collectionView: collectionView, cell: cell, indexPath: indexPath)
-        
         return cell
     }
     public func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
