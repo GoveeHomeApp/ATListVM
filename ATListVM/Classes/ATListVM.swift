@@ -324,15 +324,17 @@ extension ATListViewProxy: UICollectionViewDataSource {
     public func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         let itemVM = getItemVM(indexPath: indexPath)
         itemVM?.willDisplay()
-        let listCell = cell as! ATListCell
-        listCell.willDisplay()
+        if let listCell = cell as? ATListCell {
+            listCell.willDisplay()
+        }
         self.delegate?.listViewProxy(collectionView: collectionView, cellWillDisplay: cell, indexPath: indexPath)
     }
     public func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         let itemVM = getItemVM(indexPath: indexPath)
         itemVM?.didEndDisplaying()
-        let listCell = cell as! ATListCell
-        listCell.didEndDisplaying()
+        if let listCell = cell as? ATListCell {
+            listCell.didEndDisplaying()            
+        }
         self.delegate?.listViewProxy(collectionView: collectionView, cellDidEndDisplaying: cell, indexPath: indexPath)
     }
     public func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
