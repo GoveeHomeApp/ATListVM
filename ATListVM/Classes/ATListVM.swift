@@ -333,7 +333,7 @@ extension ATListViewProxy: UICollectionViewDataSource {
         let itemVM = getItemVM(indexPath: indexPath)
         itemVM?.didEndDisplaying()
         if let listCell = cell as? ATListCell {
-            listCell.didEndDisplaying()            
+            listCell.didEndDisplaying()
         }
         self.delegate?.listViewProxy(collectionView: collectionView, cellDidEndDisplaying: cell, indexPath: indexPath)
     }
@@ -390,7 +390,7 @@ extension ATListViewProxy: UICollectionViewDelegateFlowLayout {
 
 public typealias ATListVMState = String
 extension ATListVMState {
-    enum Value: String {
+    public enum Value: String {
         case idl = "idl"
         case add = "add"
         case delete = "delete"
