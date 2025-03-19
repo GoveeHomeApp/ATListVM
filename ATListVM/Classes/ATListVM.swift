@@ -390,20 +390,20 @@ extension ATListViewProxy: UICollectionViewDelegateFlowLayout {
 
 public typealias ATListVMState = String
 extension ATListVMState {
-    public enum Value: String {
-        case idl = "idl"
-        case add = "add"
-        case delete = "delete"
-        case update = "update"
-        case query = "query"
-        case success = "success"
-        case failure = "failure"
-        case error = "error"
-        case empty = "empty"
-        case noNet = "noNet"
-        case noData = "noData"
-        case load = "load"
-    }
+    public var idl: String { "idl" }
+    public var add: String { "add" }
+    public var delete: String { "delete" }
+    public var update: String { "update" }
+    public var query: String { "query" }
+    
+    public var success: String { "success" }
+    public var failure: String { "failure" }
+    public var error: String { "error" }
+    public var empty: String { "empty" }
+    
+    public var noNet: String { "noNet" }
+    public var noData: String { "noData" }
+    public var load: String { "load" }
 }
 
 public protocol ATListVMDelegate: AnyObject {
