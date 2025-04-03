@@ -416,10 +416,12 @@ open class ATListVM: NSObject {
     public weak var delegate:ATListVMDelegate?
     
     public override init() {
+        super.init()
         setupData()
     }
     
     public init(viewProxy:ATListViewProxy) {
+        super.init()
         self.viewProxy = viewProxy
         setupData()
     }
