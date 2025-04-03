@@ -241,7 +241,7 @@ extension ATListViewProxyDelegate {
     public func listViewProxy(collectionView: UICollectionView, footer:UICollectionReusableView, kind:String, indexPath:IndexPath) {}
 }
 
-final public class ATListViewProxy: NSObject {
+open class ATListViewProxy: NSObject {
     public weak var forwarder:AnyObject?
     public weak var delegate:ATListViewProxyDelegate?
     private var _defaultSectionVM:ATListSectionVM?
@@ -408,14 +408,14 @@ public protocol ATListVMDelegate: AnyObject {
     func listVMDidChange(state:ATListVMState, tag:Int, msg:String?, err:Error?)
 }
 
-open class ATListVM {
+open class ATListVM: NSObject {
     
     public private(set) var viewProxy:ATListViewProxy = ATListViewProxy()
     fileprivate weak var collecitonView:UICollectionView?
     
     public weak var delegate:ATListVMDelegate?
     
-    public init() {
+    public override init() {
         setupData()
     }
     
