@@ -297,12 +297,13 @@ extension ATListViewProxy: UICollectionViewDataSource {
         return 1
     }
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        getSectionVM(section: section)?.itemVMs.count ?? 0
+        let sectionVM = getSectionVM(section: section)
+        sectionVM?.collectionView = collectionView
+        return sectionVM?.itemVMs.count ?? 0
     }
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let sectionVM = getSectionVM(section: indexPath.section)
         sectionVM?.indexPath = indexPath
-        sectionVM?.collectionView = collectionView
         
         guard let itemVM = getItemVM(indexPath: indexPath) else {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "UICollectionViewCell", for: indexPath)
