@@ -47,14 +47,14 @@ open class ATListCell: UICollectionViewCell {
 
 open class ATListItemVM {
     
-    public typealias ReloadSectionBlock = (() -> Void)
-    public typealias RefreshItemBlock = (() -> Void)
-    public typealias ReloadListBlock = (() -> Void)
+    public typealias ReloadBlock = (() -> Void)
+    public typealias RefreshBlock = (() -> Void)
     public typealias SelectItemBlock = ((_ collectionView:UICollectionView, _ indexPath:IndexPath, _ itemVM: ATListItemVM) -> Void)
     
-    public fileprivate(set) var reloadSectionBlock:ReloadSectionBlock?
-    public fileprivate(set) var refreshItemBlock:RefreshItemBlock?
-    public fileprivate(set) var reloadListBlock:ReloadListBlock?
+    public fileprivate(set) var reloadListBlock:ReloadBlock?
+    public fileprivate(set) var reloadSectionBlock:ReloadBlock?
+    public fileprivate(set) var reloadItemBlock:ReloadBlock?
+    public fileprivate(set) var refreshItemBlock:RefreshBlock?
     public var onSelectItemBlock:SelectItemBlock?
     
     public fileprivate(set) weak var collectionView: UICollectionView?
@@ -69,6 +69,14 @@ open class ATListItemVM {
         setupData()
     }
     func _setupBlock() {
+        reloadListBlock = { [weak self] in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                UIView.performWithoutAnimation {
+                    self.collectionView?.reloadData()
+                }
+            }
+        }
         reloadSectionBlock = { [weak self] in
             guard let self = self else { return }
             let section = self.indexPath?.section ?? 0
@@ -78,11 +86,12 @@ open class ATListItemVM {
                 }
             }
         }
-        reloadListBlock = { [weak self] in
+        reloadItemBlock = { [weak self] in
             guard let self = self else { return }
+            guard let indexPath = self.indexPath else { return }
             DispatchQueue.main.async {
                 UIView.performWithoutAnimation {
-                    self.collectionView?.reloadData()
+                    self.collectionView?.reloadItems(at: [indexPath])
                 }
             }
         }
@@ -147,15 +156,13 @@ open class ATListReuseableView: UICollectionReusableView {
 }
 
 open class ATListSectionVM {
-    public typealias ReloadSectionBlock = (() -> Void)
-    public typealias ReloadListBlock = (() -> Void)
-    public typealias RefreshHeaderBlock = (() -> Void)
-    public typealias RefreshFooterBlock = (() -> Void)
+    public typealias ReloadBlock = (() -> Void)
+    public typealias RefreshBlock = (() -> Void)
     
-    public fileprivate(set) var reloadSectionBlock:ReloadSectionBlock?
-    public fileprivate(set) var reloadListBlock:ReloadListBlock?
-    public fileprivate(set) var refreshHeaderBlock:RefreshHeaderBlock?
-    public fileprivate(set) var refreshFooterBlock:RefreshFooterBlock?
+    public fileprivate(set) var reloadListBlock:ReloadBlock?
+    public fileprivate(set) var reloadSectionBlock:ReloadBlock?
+    public fileprivate(set) var refreshHeaderBlock:RefreshBlock?
+    public fileprivate(set) var refreshFooterBlock:RefreshBlock?
     
     public fileprivate(set) weak var collectionView: UICollectionView?
     public fileprivate(set) var indexPath: IndexPath?
