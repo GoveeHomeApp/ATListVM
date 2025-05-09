@@ -182,20 +182,20 @@ open class ATListSectionVM {
         setupData()
     }
     func _setupBlock() {
+        reloadListBlock = { [weak self] in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                UIView.performWithoutAnimation {
+                    self.collectionView?.reloadData()
+                }
+            }
+        }
         reloadSectionBlock = { [weak self] in
             guard let self = self else { return }
             let section = self.indexPath?.section ?? 0
             DispatchQueue.main.async {
                 UIView.performWithoutAnimation {
                     self.collectionView?.reloadSections(IndexSet(integer: section))
-                }
-            }
-        }
-        reloadListBlock = { [weak self] in
-            guard let self = self else { return }
-            DispatchQueue.main.async {
-                UIView.performWithoutAnimation {
-                    self.collectionView?.reloadData()
                 }
             }
         }
@@ -211,7 +211,7 @@ open class ATListSectionVM {
                 }
             }
         }
-        refreshHeaderBlock = { [weak self] in
+        refreshFooterBlock = { [weak self] in
             guard let self = self else { return }
             DispatchQueue.main.async {
                 guard let collectionView = self.collectionView, let indexPath = self.indexPath else { return }
